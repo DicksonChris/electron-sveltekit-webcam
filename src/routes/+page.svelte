@@ -1,15 +1,16 @@
 <script lang="ts">
-	// const files = window.electron.showOpenDialog()
-	// console.log(files)
+  import SaveMultiWebcam from '$lib/SaveMultiWebcam.svelte'
 </script>
 
 <div class="prose">
 	<h1>Electron Node FS Example</h1>
 
-	<div class="container grid gap-2">
+  <SaveMultiWebcam/>
+
+	<!-- <div class="container grid gap-2">
 		<label for="avatar">Upload a picture:</label>
 		<input accept="image/png, image/jpeg" id="avatar" name="avatar" type="file" />
-	</div>
+	</div> -->
 
 	<!-- <p class="flex items-center gap-4 mt-12">
 		{#if data.session}

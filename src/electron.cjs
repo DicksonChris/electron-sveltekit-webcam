@@ -2,13 +2,14 @@ const windowStateManager = require('electron-window-state')
 const { app, BrowserWindow, dialog, ipcMain } = require('electron')
 const contextMenu = require('electron-context-menu')
 const serve = require('electron-serve')
-const path = require('path')
+const os = require('os')
 const fs = require('fs')
+const path = require('path')
 
 try {
-	require('electron-reloader')(module)
+  require('electron-reloader')(module)
 } catch (e) {
-	console.error(e)
+  console.error(e)
 }
 
 const serveURL = serve({ directory: '.' })
@@ -17,90 +18,119 @@ const dev = !app.isPackaged
 let mainWindow
 
 function createWindow() {
-	let windowState = windowStateManager({
-		defaultWidth: 800,
-		defaultHeight: 600
-	})
+  let windowState = windowStateManager({
+    defaultWidth: 800,
+    defaultHeight: 600,
+  })
 
-	const mainWindow = new BrowserWindow({
-		backgroundColor: 'whitesmoke',
-		titleBarStyle: 'hidden',
-		autoHideMenuBar: true,
-		trafficLightPosition: {
-			x: 17,
-			y: 32
-		},
-		minHeight: 450,
-		minWidth: 500,
-		webPreferences: {
-			enableRemoteModule: false,
-			contextIsolation: true,
-			nodeIntegration: true,
-			spellcheck: false,
-			devTools: dev,
-			preload: path.join(__dirname, 'preload.cjs')
-		},
-		x: windowState.x,
-		y: windowState.y,
-		width: windowState.width,
-		height: windowState.height
-	})
+  const mainWindow = new BrowserWindow({
+    backgroundColor: 'whitesmoke',
+    titleBarStyle: 'hidden',
+    autoHideMenuBar: true,
+    trafficLightPosition: {
+      x: 17,
+      y: 32,
+    },
+    minHeight: 450,
+    minWidth: 500,
+    webPreferences: {
+      enableRemoteModule: false,
+      contextIsolation: true,
+      nodeIntegration: true,
+      spellcheck: false,
+      devTools: dev,
+      preload: path.join(__dirname, 'preload.cjs'),
+    },
+    x: windowState.x,
+    y: windowState.y,
+    width: windowState.width,
+    height: windowState.height,
+  })
 
-	windowState.manage(mainWindow)
+  windowState.manage(mainWindow)
 
-	mainWindow.once('ready-to-show', () => {
-		mainWindow.show()
-		mainWindow.focus()
-	})
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+    mainWindow.focus()
+  })
 
-	mainWindow.on('close', () => {
-		windowState.saveState(mainWindow)
-	})
+  mainWindow.on('close', () => {
+    windowState.saveState(mainWindow)
+  })
 
-	return mainWindow
+  return mainWindow
 }
 
 contextMenu({
-	showLookUpSelection: false,
-	showSearchWithGoogle: false,
-	showCopyImage: false,
-	prepend: (defaultActions, params, browserWindow) => [
-		{
-			label: 'Make App 💻'
-		}
-	]
+  showLookUpSelection: false,
+  showSearchWithGoogle: false,
+  showCopyImage: false,
+  prepend: (defaultActions, params, browserWindow) => [
+    {
+      label: 'Make App 💻',
+    },
+  ],
 })
 
 function loadVite(port) {
-	mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
-		console.log('Error loading URL, retrying', e)
-		setTimeout(() => {
-			loadVite(port)
-		}, 200)
-	})
+  mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
+    console.log('Error loading URL, retrying', e)
+    setTimeout(() => {
+      loadVite(port)
+    }, 200)
+  })
 }
 
 function createMainWindow() {
-	mainWindow = createWindow()
-	mainWindow.once('close', () => {
-		mainWindow = null
-	})
+  mainWindow = createWindow()
+  mainWindow.once('close', () => {
+    mainWindow = null
+  })
 
-	if (dev) loadVite(port)
-	else serveURL(mainWindow)
+  if (dev) loadVite(port)
+  else serveURL(mainWindow)
 }
 
 app.once('ready', createMainWindow)
 app.on('activate', () => {
-	if (!mainWindow) {
-		createMainWindow()
-	}
+  if (!mainWindow) {
+    createMainWindow()
+  }
 })
 
 app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
-ipcMain.on('to-main', (event, count) => {
-	return mainWindow.webContents.send('from-main', `next count is ${count + 1}`)
-})
+ipcMain.handle("window/is-maximized", () => {
+  return mainWindow.isMaximized();
+});
+ipcMain.on('window/minimize', () => mainWindow.minimize())
+ipcMain.on('window/maximize', () => mainWindow.maximize())
+ipcMain.on('window/restore', () => mainWindow.unmaximize())
+ipcMain.on('window/show', () => mainWindow.show())
+ipcMain.on('window/exit', () => app.quit())
+
+// ipcMain.on('to-main', (event, count) => {
+//   return mainWindow.webContents.send('from-main', `next count is ${count + 1}`)
+// })
+
+// // Respond to the save-image event
+// ipcMain.on('save-image', (event, { imgData, fileName, poNumber }) => {
+//   const desktopPath = path.join(os.homedir(), 'Desktop')
+//   const snapsPath = path.join(desktopPath, 'webcamsnaps')
+//   const poFolderPath = path.join(snapsPath, poNumber || 'unknown')
+
+//   fs.mkdirSync(poFolderPath, { recursive: true })
+
+//   const base64Data = Buffer.from(imgData.split(',')[1], 'base64')
+//   const imgPath = path.join(poFolderPath, fileName)
+
+//   fs.writeFile(imgPath, base64Data, (err) => {
+//     if (err) {
+//       console.error('An error occurred while saving the image:', err)
+//     } else {
+//       console.log(`Image saved successfully: ${imgPath}`)
+//     }
+//   })
+// })
