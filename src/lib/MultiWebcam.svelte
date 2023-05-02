@@ -1,66 +1,75 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from 'svelte'
+  import { bridge } from 'electron'
 
-  // Declare a reactive array to store the webcam devices and streams
-  let webcams = [];
+  let webcams = []
 
-  // Define a function to start a webcam stream with a given device
   const startWebcamStream = (webcamDevice) => {
-    // Define the constraints for the stream
     const constraints = {
       audio: false,
       video: {
-        optional: [{ sourceId: webcamDevice.deviceId }]
+        advanced: [{ deviceId: webcamDevice.deviceId }, { width: 3264 }, { height: 2448 }],
       },
-      deviceId: {
-        exact: webcamDevice.deviceId
-      },
-    };
+    }
 
-    // Request the user media and handle the callbacks
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then((stream) => {
-        // Add the device and stream to the webcams array
         webcams = [
           ...webcams,
           {
             device: webcamDevice,
             stream,
           },
-        ];
+        ]
       })
-      .catch((error) => {
-        if (error.name === 'NotAllowedError') {
-          console.warn('Access to camera is denied.');
-        } else if (error.name === 'NotFoundError') {
-          console.warn('No camera with the specified constraints was found.');
-        } else {
-          console.error(error);
-        }
-      });
-  };
+      .catch((error) => console.error(error))
+  }
 
-  // Run this code when the component mounts
   onMount(() => {
-    // Get the webcam devices and filter by video input
     navigator.mediaDevices
       .enumerateDevices()
-      .then((devices) => devices.filter((device) => device.kind === 'videoinput'))
+      .then((devices) =>
+        devices.filter(
+          (device) => device.kind === 'videoinput' && device.label.includes('0c45:6366')
+        )
+      )
       .then((webcamDevices) =>
-        // Start a stream for each webcam device
-        webcamDevices.forEach((webcamDevice) => startWebcamStream(webcamDevice))
-      );
-  });
+        webcamDevices
+          .sort((a, b) => a.deviceId.localeCompare(b.deviceId))
+          .forEach((webcamDevice) => startWebcamStream(webcamDevice))
+      )
+  })
 
-  // Define a custom directive that sets the srcObject property
   function srcObject(node, stream) {
-    node.srcObject = stream;
+    node.srcObject = stream
     return {
       update(stream) {
-        node.srcObject = stream;
+        node.srcObject = stream
       },
-    };
+    }
+  }
+
+  const captureImage = async (stream) => {
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.play();
+
+    video.onloadedmetadata = async () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0);
+
+      canvas.toBlob((blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          bridge.saveImage(reader.result);
+        };
+        reader.readAsArrayBuffer(blob);
+      }, 'image/jpeg');
+    }
   }
 </script>
 
@@ -70,7 +79,7 @@
       LABEL = "{webcam.device.label}"<br />
       ID = "{webcam.device.deviceId}"
     </div>
-    <!-- Use the custom directive here -->
-    <video autoplay={true} use:srcObject={webcam.stream}></video>
+    <video autoplay={true} use:srcObject={webcam.stream} />
+    <button on:click={() => captureImage(webcam.stream)}>Save image</button>
   {/each}
 </div>

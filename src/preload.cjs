@@ -18,6 +18,7 @@ const WindowAPIS = {
   restore: () => ipcRenderer.send('window/restore'),
   show: () => ipcRenderer.send('window/show'),
   exit: () => ipcRenderer.send('window/exit'),
+  saveImage: (arrayBuffer) => ipcRenderer.send('saveImage', arrayBuffer),
 }
 
 // contextBridge.exposeInMainWorld('os', {

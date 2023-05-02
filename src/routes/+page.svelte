@@ -1,11 +1,11 @@
 <script lang="ts">
-  import SaveMultiWebcam from '$lib/SaveMultiWebcam.svelte'
+  import MultiWebcam from '$lib/MultiWebcam.svelte'
 </script>
 
 <div class="prose">
 	<h1>Electron Node FS Example</h1>
 
-  <SaveMultiWebcam/>
+  <MultiWebcam/>
 
 	<!-- <div class="container grid gap-2">
 		<label for="avatar">Upload a picture:</label>

@@ -58,6 +58,10 @@ function createWindow() {
     windowState.saveState(mainWindow)
   })
 
+  if (dev) {
+    mainWindow.webContents.openDevTools(); // Open DevTools by default
+  }
+
   return mainWindow
 }
 
@@ -110,6 +114,19 @@ ipcMain.on('window/maximize', () => mainWindow.maximize())
 ipcMain.on('window/restore', () => mainWindow.unmaximize())
 ipcMain.on('window/show', () => mainWindow.show())
 ipcMain.on('window/exit', () => app.quit())
+
+
+ipcMain.on('saveImage', (event, arrayBuffer) => {
+  const imgBuffer = Buffer.from(arrayBuffer);
+  const savePath = path.join(app.getPath('pictures'), 'captured_image.jpg');
+  fs.writeFile(savePath, imgBuffer, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(`Image saved to ${savePath}`);
+    }
+  });
+});
 
 // ipcMain.on('to-main', (event, count) => {
 //   return mainWindow.webContents.send('from-main', `next count is ${count + 1}`)

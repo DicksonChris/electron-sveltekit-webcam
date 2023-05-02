@@ -2859,10 +2859,6 @@ html {
   display: grid;
 }
 
-.hidden {
-  display: none;
-}
-
 .h-6 {
   height: 1.5rem;
 }
@@ -2873,18 +2869,6 @@ html {
 
 .h-full {
   height: 100%;
-}
-
-.h-max {
-  height: max-content;
-}
-
-.h-\[\] {
-  height: ;
-}
-
-.h-\[100vh\] {
-  height: 100vh;
 }
 
 .h-screen {
@@ -2923,20 +2907,8 @@ html {
   flex: 1 1 0%;
 }
 
-.flex-shrink {
-  flex-shrink: 1;
-}
-
 .shrink-0 {
   flex-shrink: 0;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-
-.grow {
-  flex-grow: 1;
 }
 
 .grow-0 {
@@ -3020,14 +2992,6 @@ html {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.font-light {
-  font-weight: 300;
 }
 
 .font-normal {
