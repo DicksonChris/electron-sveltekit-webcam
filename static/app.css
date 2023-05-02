@@ -1918,6 +1918,14 @@ html {
   color: hsl(var(--p) / var(--tw-text-opacity));
 }
 
+.btn-outline.btn-success .badge-outline {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--su) / var(--tw-border-opacity));
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: hsl(var(--su) / var(--tw-text-opacity));
+}
+
 .btn-outline:hover .badge.outline {
   --tw-border-opacity: 1;
   border-color: hsl(var(--b2, var(--b1)) / var(--tw-border-opacity));
@@ -2006,6 +2014,27 @@ html {
   outline: 2px solid hsl(var(--p));
 }
 
+.btn-success {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--su) / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--su) / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: hsl(var(--suc, var(--nc)) / var(--tw-text-opacity));
+}
+
+.btn-success:hover,
+    .btn-success.btn-active {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--su) / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--su) / var(--tw-bg-opacity));
+}
+
+.btn-success:focus-visible {
+  outline: 2px solid hsl(var(--su));
+}
+
 .btn.glass:hover,
     .btn.glass.btn-active {
   --glass-opacity: 25%;
@@ -2029,6 +2058,21 @@ html {
   background-color: hsl(var(--pf, var(--p)) / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: hsl(var(--pc) / var(--tw-text-opacity));
+}
+
+.btn-outline.btn-success {
+  --tw-text-opacity: 1;
+  color: hsl(var(--su) / var(--tw-text-opacity));
+}
+
+.btn-outline.btn-success:hover,
+      .btn-outline.btn-success.btn-active {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--su) / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--su) / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: hsl(var(--suc, var(--nc)) / var(--tw-text-opacity));
 }
 
 .btn-disabled,
@@ -2105,6 +2149,17 @@ html {
   outline: 2px solid hsl(var(--p));
 }
 
+.drawer-toggle:focus-visible ~ .drawer-content .drawer-button.btn-success {
+  outline: 2px solid hsl(var(--su));
+}
+
+.label-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: hsl(var(--bc) / var(--tw-text-opacity));
+}
+
 .label a:hover {
   --tw-text-opacity: 1;
   color: hsl(var(--bc) / var(--tw-text-opacity));
@@ -2114,9 +2169,22 @@ html {
   line-height: 1em;
 }
 
+.input-bordered {
+  --tw-border-opacity: 0.2;
+}
+
 .input:focus {
   outline: 2px solid hsla(var(--bc) / 0.2);
   outline-offset: 2px;
+}
+
+.input-primary {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--p) / var(--tw-border-opacity));
+}
+
+.input-primary:focus {
+  outline: 2px solid hsl(var(--p));
 }
 
 .input-disabled,
@@ -2269,6 +2337,10 @@ html {
 
 .prose :where(tbody tr, thead):not(:where([class~="not-prose"] *)) {
   border-bottom-color: hsl(var(--bc) / 20%);
+}
+
+.btn-block {
+  width: 100%;
 }
 
 .avatar.online:before {
@@ -2899,6 +2971,18 @@ html {
   width: 100%;
 }
 
+.w-\[\] {
+  width: ;
+}
+
+.w-\[66\] {
+  width: 66;
+}
+
+.w-\[66\%\] {
+  width: 66%;
+}
+
 .max-w-screen-sm {
   max-width: 640px;
 }
@@ -2919,6 +3003,10 @@ html {
   resize: both;
 }
 
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .flex-col {
   flex-direction: column;
 }
@@ -2931,12 +3019,22 @@ html {
   justify-content: center;
 }
 
+.justify-around {
+  justify-content: space-around;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
 
 .gap-4 {
   gap: 1rem;
+}
+
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
 }
 
 .self-center {
@@ -2947,12 +3045,21 @@ html {
   overflow-y: auto;
 }
 
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .overflow-y-hidden {
   overflow-y: hidden;
 }
 
 .border {
   border-width: 1px;
+}
+
+.border-accent {
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--a) / var(--tw-border-opacity));
 }
 
 .bg-\[\#254053\] {
@@ -2989,9 +3096,23 @@ html {
   padding-top: 0.5rem;
 }
 
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-normal {

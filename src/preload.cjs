@@ -18,6 +18,9 @@ const WindowAPIS = {
   restore: () => ipcRenderer.send('window/restore'),
   show: () => ipcRenderer.send('window/show'),
   exit: () => ipcRenderer.send('window/exit'),
+}
+
+const FileSystemAPIS = {
   saveImage: (arrayBuffer) => ipcRenderer.send('saveImage', arrayBuffer),
 }
 
@@ -54,6 +57,7 @@ const WindowAPIS = {
 
 const APP_BRIDGE = {
   Window: WindowAPIS,
+  FileSystem: FileSystemAPIS
 }
 
 contextBridge.exposeInMainWorld('bridge', APP_BRIDGE)

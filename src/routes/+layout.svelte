@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Dragbar from '$lib/windowTitleBar/Dragbar.svelte'
+	import TitleBar from '$lib/windowTitleBar/TitleBar.svelte'
 	import '../app.postcss'
 	import { onMount } from 'svelte'
 
@@ -8,9 +8,9 @@
 </script>
 
 {#if ready}
-	<Dragbar>
+	<TitleBar>
 		<main class="max-w-screen-sm mx-auto my-20 px-6">
 			<slot />
 		</main>
-	</Dragbar>
+	</TitleBar>
 {/if}

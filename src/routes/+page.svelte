@@ -1,11 +1,13 @@
 <script lang="ts">
-  import MultiWebcam from '$lib/MultiWebcam.svelte'
+  // import MultiWebcam from '$lib/MultiWebcam.svelte'
+  import POForm from "$lib/POForm.svelte";
 </script>
 
 <div class="prose">
-	<h1>Electron Node FS Example</h1>
+	<h1>Working Title</h1>
 
-  <MultiWebcam/>
+  <!-- <MultiWebcam/> -->
+  <POForm/>
 
 	<!-- <div class="container grid gap-2">
 		<label for="avatar">Upload a picture:</label>
