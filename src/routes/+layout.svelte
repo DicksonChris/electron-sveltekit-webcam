@@ -9,7 +9,7 @@
 
 {#if ready}
 	<TitleBar>
-		<main class="max-w-screen-sm mx-auto my-20 px-6">
+		<main class="mx-auto my-8 px-6">
 			<slot />
 		</main>
 	</TitleBar>
