@@ -1,9 +1,10 @@
 const windowStateManager = require('electron-window-state')
-const { app, BrowserWindow, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const contextMenu = require('electron-context-menu')
 const serve = require('electron-serve')
 const os = require('os')
 const fs = require('fs')
+const { spawn } = require('child_process')
 const path = require('path')
 
 try {
@@ -128,5 +129,24 @@ ipcMain.on('saveImage', (event, imageObject) => {
     } else {
       console.log(`Image saved to ${savePath}`)
     }
+  })
+})
+
+ipcMain.on('scanImage', (event, filename) => {
+  // spawn the node script with the filename as an argument
+  const command = 'node'
+  const args = ['./src/scripts/scanlog.mjs', filename]
+  const child = spawn(command, args)
+
+  child.stdout.on('data', (data) => {
+    const output = data.toString()
+    // send the output to the renderer process
+    event.reply('scanOutput', output)
+  })
+
+  child.stderr.on('data', (data) => {
+    const error = data.toString()
+    // send the error to the renderer process
+    event.reply('scanError', error)
   })
 })

@@ -13,6 +13,8 @@ const WindowAPIS = {
 
 const FileSystemAPIS = {
   saveImage: (data) => ipcRenderer.send('saveImage', data),
+  scanImage: (filename) => ipcRenderer.send('scanImage', filename),
+  onScanMessage: (channel, callback) => ipcRenderer.on(channel, callback),
 }
 
 

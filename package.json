@@ -29,6 +29,7 @@
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
 		"@tailwindcss/typography": "^0.5.9",
 		"autoprefixer": "^10.4.14",
+		"chalk": "^5.2.0",
 		"daisyui": "^2.51.6",
 		"electron-context-menu": "^3.6.1",
 		"electron-reloader": "^1.2.3",

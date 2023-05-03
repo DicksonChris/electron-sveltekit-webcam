@@ -23,15 +23,19 @@ import xpressGlobalSystems from '$lib/shippingCompanySelector/shippingCompanies/
 import yrcFreight from '$lib/shippingCompanySelector/shippingCompanies/YRC Freight.png'
 
 interface ShippingCompanyPrototype {
-  image: string;
-  company: string;
+  image: string
+  company: string
 }
 
 interface ShippingCompany extends ShippingCompanyPrototype {
-  id: number;
+  id: number
 }
 
 const shippingCompaniesPrototype: ShippingCompanyPrototype[] = [
+  {
+    image: '',
+    company: '',
+  },
   {
     image: aaaCooperTransportation,
     company: 'AAA Cooper Transportation',
@@ -128,9 +132,8 @@ const shippingCompaniesPrototype: ShippingCompanyPrototype[] = [
 
 function addIds(shippingCompanies: ShippingCompanyPrototype[]): ShippingCompany[] {
   return shippingCompanies.map((company, index) => {
-    return { id: index, ...company };
-  });
+    return { id: index, ...company }
+  })
 }
 
-export const shippingCompanies: ShippingCompany[] = addIds(shippingCompaniesPrototype);
-
+export const shippingCompanies: ShippingCompany[] = addIds(shippingCompaniesPrototype)

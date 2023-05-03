@@ -112,7 +112,7 @@
       <div class="flex flex-col justify-around overflow-x-hidden">
         <section class="prose">
           <h2 class="mb-2">CAMERA {idx + 1}</h2>
-          <p class="text-xs">{webcam.device.deviceId}</p>
+          <p class="text-xs">ID: {webcam.device.deviceId.replace(/[0-9]/g, '').slice(-4).toUpperCase()}</p>
         </section>
         <video autoplay={true} use:srcObject={webcam.stream} />
         <button class="btn btn-primary" on:click={() => saveImage(webcam)}>Save image</button>
