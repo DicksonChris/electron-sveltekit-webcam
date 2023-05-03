@@ -12,6 +12,7 @@
     </li>
   </list>
 
+
   <!-- <div class="container grid gap-2">
 		<label for="avatar">Upload a picture:</label>
 		<input accept="image/png, image/jpeg" id="avatar" name="avatar" type="file" />

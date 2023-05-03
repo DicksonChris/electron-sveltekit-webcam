@@ -25,6 +25,7 @@
 		"baseUrl": ".",
 		"allowJs": true,
 		"checkJs": false,
+    "resolveJsonModule": true,
 		"paths": {
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"],

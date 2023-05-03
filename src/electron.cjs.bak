@@ -59,7 +59,7 @@ function createWindow() {
   })
 
   if (dev) {
-    mainWindow.webContents.openDevTools() // Open DevTools by default
+    mainWindow.webContents.openDevTools(); // Open DevTools by default
   }
 
   return mainWindow
@@ -106,27 +106,48 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
-ipcMain.handle('window/is-maximized', () => {
-  return mainWindow.isMaximized()
-})
+ipcMain.handle("window/is-maximized", () => {
+  return mainWindow.isMaximized();
+});
 ipcMain.on('window/minimize', () => mainWindow.minimize())
 ipcMain.on('window/maximize', () => mainWindow.maximize())
 ipcMain.on('window/restore', () => mainWindow.unmaximize())
 ipcMain.on('window/show', () => mainWindow.show())
 ipcMain.on('window/exit', () => app.quit())
 
-ipcMain.on('saveImage', (event, imageObject) => {
-  const imgBuffer = Buffer.from(imageObject.blob)
-  const timestamp = imageObject.timestamp
-  const name = imageObject.name
 
-  const filename = `${name}_${timestamp}.jpg`
-  const savePath = path.join(app.getPath('pictures'), filename)
+ipcMain.on('saveImage', (event, arrayBuffer) => {
+  const imgBuffer = Buffer.from(arrayBuffer);
+  const savePath = path.join(app.getPath('pictures'), 'captured_image.jpg');
   fs.writeFile(savePath, imgBuffer, (err) => {
     if (err) {
-      console.error(err)
+      console.error(err);
     } else {
-      console.log(`Image saved to ${savePath}`)
+      console.log(`Image saved to ${savePath}`);
     }
-  })
-})
+  });
+});
+
+// ipcMain.on('to-main', (event, count) => {
+//   return mainWindow.webContents.send('from-main', `next count is ${count + 1}`)
+// })
+
+// // Respond to the save-image event
+// ipcMain.on('save-image', (event, { imgData, fileName, poNumber }) => {
+//   const desktopPath = path.join(os.homedir(), 'Desktop')
+//   const snapsPath = path.join(desktopPath, 'webcamsnaps')
+//   const poFolderPath = path.join(snapsPath, poNumber || 'unknown')
+
+//   fs.mkdirSync(poFolderPath, { recursive: true })
+
+//   const base64Data = Buffer.from(imgData.split(',')[1], 'base64')
+//   const imgPath = path.join(poFolderPath, fileName)
+
+//   fs.writeFile(imgPath, base64Data, (err) => {
+//     if (err) {
+//       console.error('An error occurred while saving the image:', err)
+//     } else {
+//       console.log(`Image saved successfully: ${imgPath}`)
+//     }
+//   })
+// })

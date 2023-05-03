@@ -6,6 +6,7 @@
     width: 3264,
     height: 2448,
   }
+
   type Webcam = { device: MediaDeviceInfo; stream: MediaStream }
   let webcams: Webcam[] = []
 
@@ -59,12 +60,25 @@
     }
   }
 
-  const captureImage = async (stream: MediaStream) => {
+  function saveImage(webcam: Webcam) {
+    const timestamp = new Date()
+      .toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      })
+      .replace(/[/:]/g, '-')
+      .replace(/ /g, '-')
+      
     const video = document.createElement('video')
-    video.srcObject = stream
+    video.srcObject = webcam.stream
     video.play()
 
-    video.onloadedmetadata = async () => {
+    video.onloadedmetadata = () => {
       const canvas = document.createElement('canvas')
       canvas.width = video.videoWidth
       canvas.height = video.videoHeight
@@ -74,11 +88,21 @@
       canvas.toBlob((blob) => {
         const reader = new FileReader()
         reader.onload = () => {
-          fileSystemAPI.saveImage(reader.result)
+          const name = `CAMERA-${webcams.indexOf(webcam) + 1}`
+          const data = {
+            name,
+            timestamp,
+            blob: reader.result,
+          }
+          fileSystemAPI.saveImage(data)
         }
         reader.readAsArrayBuffer(blob)
       }, 'image/jpeg')
     }
+  }
+
+  function saveImages() {
+    webcams.forEach((webcam) => saveImage(webcam))
   }
 </script>
 
@@ -88,13 +112,12 @@
       <div class="flex flex-col justify-around overflow-x-hidden">
         <section class="prose">
           <h2 class="mb-2">CAMERA {idx + 1}</h2>
-          <p class="text-xs">device-id-1234</p>
+          <p class="text-xs">{webcam.device.deviceId}</p>
         </section>
-        <video autoplay={true} use:srcObject={webcam.stream}
-          ><track kind="captions" aria-hidden="true" /></video
-        >
+        <video autoplay={true} use:srcObject={webcam.stream} />
+        <button class="btn btn-primary" on:click={() => saveImage(webcam)}>Save image</button>
       </div>
     {/each}
   </div>
-  <button class="btn btn-success" on:click={() => console.log('SAVED ')}>Save image</button>
+  <button class="btn btn-success" on:click={saveImages}>Save All Images</button>
 </div>
