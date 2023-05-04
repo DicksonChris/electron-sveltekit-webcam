@@ -12,9 +12,18 @@ const WindowAPIS = {
 }
 
 const FileSystemAPIS = {
+  // Used to save stills from the camera
   saveImage: (data) => ipcRenderer.send('saveImage', data),
+  // Used to initiate a scan
   scanImage: (filename) => ipcRenderer.send('scanImage', filename),
+  // Returns the console output of the scan
   onScanMessage: (channel, callback) => ipcRenderer.on(channel, callback),
+  // Used to get a single scan jpg
+  getImage: (filename) => ipcRenderer.send('getImage', filename),
+  onImageBuffer: (channel, callback) => ipcRenderer.on(channel, callback),
+  // Used to get scan jpgs
+  getImages: (filename) => ipcRenderer.send('getImages', filename),
+  onImagesList: (channel, callback) => ipcRenderer.on(channel, callback),
 }
 
 

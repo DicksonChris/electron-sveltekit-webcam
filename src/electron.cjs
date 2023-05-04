@@ -150,3 +150,35 @@ ipcMain.on('scanImage', (event, filename) => {
     event.reply('scanError', error)
   })
 })
+
+ipcMain.on('getImage', (event, filename) => {
+  // join the filename with the path
+  const filepath = path.join('C:\\Users\\chris\\Desktop\\Projects\\hp-scan', filename) // added this line
+  // read the file as a buffer
+  fs.readFile(filepath, (err, data) => {
+    if (err) {
+      // send the error to the renderer process
+      event.reply('imageError', err.message)
+    } else {
+      // send the buffer to the renderer process
+      event.reply('imageBuffer', data)
+    }
+  })
+})
+
+ipcMain.on('getImages', (event, filename) => {
+  // use the fixed path
+  const folderpath = 'C:\\Users\\chris\\Desktop\\Projects\\hp-scan'
+  // read the folder and filter for .jpg files containing the filename
+  fs.readdir(folderpath, (err, files) => {
+    if (err) {
+      // send the error to the renderer process
+      event.reply('imagesError', err.message)
+    } else {
+      // filter for .jpg files containing the filename
+      const images = files.filter(file => path.extname(file) === '.jpg' && file.includes(filename))
+      // send the images list to the renderer process
+      event.reply('imagesList', images)
+    }
+  })
+})
