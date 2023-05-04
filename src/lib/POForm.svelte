@@ -1,6 +1,6 @@
 <script lang="ts">
   let poNumber = ''
-  let palletNumber
+  export let palletNumber
   let weight
 
   function increment() {

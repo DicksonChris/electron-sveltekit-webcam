@@ -1,92 +1,79 @@
-<!-- <script lang="ts">
+<script>
+  const fileSystemAPI = window.bridge.FileSystem
   import placeholder from '$lib/placeholder_freight_log.jpg'
   import scanned from '$lib/scanned_log.jpg'
 
-  // Define an async function that waits for 1 second and returns scanned image
-  async function scanFreightLog() {
-    await new Promise((resolve) => setTimeout(resolve, 600))
-    return scanned
-  }
-
-  // Define a reactive variable to store the current image
-  let currentImage = placeholder
-
-  // Define a function that calls the scanFreightLog function and updates the current image
-  async function handleScan() {
-    currentImage = await scanFreightLog()
-  }
-</script>
-
-<div class="grid gap-2 mx-auto">
-  <div class="flex flex-col gap-2 max-w-[40vh]">
-    <img src={currentImage} alt="" />
-    <button class="btn btn-primary" on:click={handleScan}>Scan freight log</button>
-    {#if currentImage === scanned}
-      <a href="takePhotos" class="btn btn-primary">Continue</a>
-    {/if}
-  </div>
-</div> -->
-
-<script>
-  const fileSystemAPI = window.bridge.FileSystem
   let filename = ''
   let output = ''
   let error = ''
+  let scanning = false
 
-  function scanImage() {
-    // send the filename to the main process
+  const redLines = ['No pages are in the feeder.']
+  const greenLines = ['Beginning scan', 'Scanned page', 'Exporting image', 'Finished saving images']
+
+  function scanFreightLog() {
+    output = '' // clear the output
+    error = '' // clear the error
     fileSystemAPI.scanImage(filename)
-    // clear the input field
-    filename = ''
+    scanning = true
   }
 
-  // listen for messages from the main process
   fileSystemAPI.onScanMessage('scanOutput', (event, data) => {
-    // check and log the output in green or red colors
-    const trimmedOutput = data.trim()
-    let matchFound = checkAndLog(trimmedOutput, greenLines, 'green')
-    if (!matchFound) {
-      checkAndLog(trimmedOutput, redLines, 'red')
+    output += data + '\n'
+    // TODO: Don't actually know what the last line of the output is
+    if (data.includes('Finished saving images')) {
+      scanning = false
+    } else if (data.includes('No pages are in the feeder.')) {
+      scanning = false
     }
   })
 
   fileSystemAPI.onScanMessage('scanError', (event, data) => {
-    // check and log the error in green or red colors
-    const trimmedError = data.trim()
-    let matchFound = checkAndLog(trimmedError, greenLines, 'green')
-    if (!matchFound) {
-      checkAndLog(trimmedError, redLines, 'red')
+    error += data + '\n'
+    if (data.includes('The selected scanner is busy')) {
+      scanning = false // set scanning to false when error
     }
   })
 
-  // define the lines to match for green or red colors
-  const redLines = ['No pages are in the feeder.']
-  const greenLines = [
-    'Beginning scan',
-    'Scanned page',
-    'Exporting image',
-    'Finished saving images',
-  ]
+  let currentImage = placeholder
 
-  // define a function to check and log a message in a color
-  function checkAndLog(message, lines, color) {
-    let matchFound = lines.some((line) => {
-      return message.includes(line)
-    })
-    if (matchFound) {
-      // append the message to the output or error variable with a span element of the color
-      if (color === 'green') {
-        output += `<span class="text-green-500">${message}</span>\n`
-      } else if (color === 'red') {
-        error += `<span class="text-red-500">${message}</span>\n`
+  $: formattedOutput = output
+    .split('\n')
+    .map((line) => {
+      let color = 'black'
+      if (redLines.some((redLine) => line.includes(redLine))) {
+        color = 'red'
+      } else if (greenLines.some((greenLine) => line.includes(greenLine))) {
+        color = 'green'
       }
-    }
-    return matchFound
-  }
+      return `<p style="color: ${color};">${line}</p>`
+    })
+    .join('')
 </script>
 
-<input type="text" bind:value={filename} placeholder="Enter filename" class="border-2 border-gray-300 p-2 rounded-md" />
-<button on:click={scanImage} class="bg-blue-500 text-white p-2 rounded-md">Scan image</button>
-<div id="output" class="font-mono">{@html output}</div>
-<div id="error" class="font-mono">{@html error}</div>
-<a href="takePhotos" class="btn btn-primary">Continue</a>
+<div class="flex gap-2 mx-auto">
+  <div class="flex flex-col gap-2 max-w-[40vh]">
+    <label for="filename">Enter PO #:</label><br />
+    <input
+      name="filename"
+      type="text"
+      bind:value={filename}
+      placeholder="PO #"
+      class="border-2 border-gray-300 p-2 rounded-md"
+    />
+    <div id="output" class="font-mono">{@html formattedOutput}</div>
+    <div id="error" class="font-mono text-orange-400">{@html error}</div>
+    <a href="takePhotos" class="btn btn-primary">tempContinue</a>
+  </div>
+  <div class="flex flex-col gap-2 max-w-[40vh]">
+    <img src={currentImage} alt="" />
+    <button
+      class="btn {scanning ? 'btn-disabled' : 'btn-primary'}"
+      on:click={scanFreightLog}
+      disabled={scanning}>Scan freight log</button
+    >
+    <!-- {#if currentImage === scanned}
+      <a href="takePhotos" class="btn btn-primary">Continue</a>
+    {/if} -->
+  </div>
+</div>
