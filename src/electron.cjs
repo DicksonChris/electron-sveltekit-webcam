@@ -7,6 +7,9 @@ const fs = require('fs')
 const { spawn } = require('child_process')
 const path = require('path')
 
+const dotenv = require('dotenv')
+dotenv.config()
+
 try {
   require('electron-reloader')(module)
 } catch (e) {
@@ -133,9 +136,15 @@ ipcMain.on('saveImage', (event, imageObject) => {
 })
 
 ipcMain.on('scanImage', (event, filename) => {
-  // spawn the node script with the filename as an argument
+  // Create a folder named after the filename
+  const folderPath = path.join(process.env.SCAN_FOLDER, filename)
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath)
+  }
+
+  // Spawn the node script with the filename as an argument
   const command = 'node'
-  const args = ['./src/scripts/scanlog.mjs', filename]
+  const args = ['./src/scripts/scanlog.mjs', folderPath, filename] // Pass folderPath as an additional argument
   const child = spawn(command, args)
 
   child.stdout.on('data', (data) => {
@@ -152,8 +161,8 @@ ipcMain.on('scanImage', (event, filename) => {
 })
 
 ipcMain.on('getImage', (event, filename) => {
-  // join the filename with the path
-  const filepath = path.join('C:\\Users\\chris\\Desktop\\Projects\\hp-scan', filename) // added this line
+  const foldername = filename.split('.')[0] 
+  const filepath = path.join(process.env.SCAN_FOLDER, foldername, filename)
   // read the file as a buffer
   fs.readFile(filepath, (err, data) => {
     if (err) {
@@ -167,8 +176,7 @@ ipcMain.on('getImage', (event, filename) => {
 })
 
 ipcMain.on('getImages', (event, filename) => {
-  // use the fixed path
-  const folderpath = 'C:\\Users\\chris\\Desktop\\Projects\\hp-scan'
+  const folderpath = path.join(process.env.SCAN_FOLDER, filename)
   // read the folder and filter for .jpg files containing the filename
   fs.readdir(folderpath, (err, files) => {
     if (err) {

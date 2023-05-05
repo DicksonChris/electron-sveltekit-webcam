@@ -1,7 +1,7 @@
 <script lang="ts">
   import MultiWebcam from '$lib/MultiWebcam.svelte'
   import POForm from "$lib/POForm.svelte";
-	import FreightLog from "$lib/FreightLog.svelte"
+	import FreightLog from "$lib/freightLog/FreightLog.svelte"
   import { page } from '$app/stores';
 </script>
 

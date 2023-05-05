@@ -1,5 +1,4 @@
 <script lang="ts">
-  import FreightLog from "$lib/FreightLog.svelte";
-  import ImageViewer from "$lib/imageViewer/ImageViewer.svelte";
+  import FreightLog from "$lib/freightLog/FreightLog.svelte";
 </script>
 <FreightLog/>

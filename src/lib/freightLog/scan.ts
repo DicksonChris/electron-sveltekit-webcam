@@ -29,3 +29,14 @@ export function isScanning(data: string) {
     data.includes('The selected scanner is busy.')
   )
 }
+
+export function getTotalPages(data: string): number | null {
+  const regex = /Scanned page \d+ of (\d+)/;
+  const match = data.match(regex);
+
+  if (match && match[1]) {
+    return parseInt(match[1], 10);
+  }
+
+  return null;
+}
