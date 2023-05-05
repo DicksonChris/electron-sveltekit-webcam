@@ -1,8 +1,11 @@
 <script lang="ts">
 </script>
 
-<div class="prose">
-  <h1>Working Title</h1>
+<div>
+
+  <div class="prose">
+    <h1>Working Title</h1>
+  </div>
   <list>
     <li>
       <a href="/scanLog">Start new order</a>

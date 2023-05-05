@@ -1,10 +1,14 @@
 <script lang="ts">
   import ImageList from '$lib/imageViewer/ImageList.svelte'
   import ImageButtons from '$lib/imageViewer/ImageButtons.svelte'
-  import { handleGetImage, handleGetImages, handleNextImage, handlePrevImage } from '$lib/imageViewer/utils'
+  import { getImages, loadFirstImage } from '$lib/imageViewer/utils'
 
   export let filename: string
+
+  $: if (filename) {
+    getImages(filename, loadFirstImage)
+  }
 </script>
 
-<ImageList {filename} on:get-image={handleGetImage} on:get-images={handleGetImages} />
-<ImageButtons on:next-image={handleNextImage} on:prev-image={handlePrevImage} />
+<ImageList />
+<ImageButtons />

@@ -1,4 +1,4 @@
-import { imageBuffer, imagesList, imageIndex, updateImageIndex } from './store.ts'
+import { imageBuffer, imagesList, imageIndex, updateImageIndex } from './store'
 
 const fileSystemAPI = window.bridge.FileSystem
 
@@ -30,59 +30,14 @@ export function getImages(filename: string, callback?: () => void) {
   })
 }
 
-export function createImageURL(buffer: ArrayBuffer) {
+export function createImageURL(buffer: ArrayBuffer | null) {
+  if (!buffer) return
   const blob = new Blob([buffer], { type: 'image/jpeg' })
   const url = URL.createObjectURL(blob)
   return url
 }
 
-export function handleGetImage(event) {
-  const { filename } = event.detail
-  getImage(filename)
-}
-
-export function handleGetImages(event) {
-  const { filename } = event.detail
-  getImages(filename, loadFirstImage)
-}
-
-export function handleNextImage() {
-  // Use the custom function to update the imageIndex by 1
-  updateImageIndex(1)
-
-  // Set the image buffer for the new index
-  let list: string[] | null = []
-  let index = 0
-  imagesList.subscribe(value => {
-    list = value
-  })()
-  imageIndex.subscribe(value => {
-    index = value
-  })()
-  if (list && list.length > 0) {
-    getImage(list[index])
-  }
-}
-
-export function handlePrevImage() {
-  // Use the custom function to update the imageIndex by -1
-  updateImageIndex(-1)
-
-  // Set the image buffer for the new index
-  let list: string[] | null = []
-  let index = 0
-  imagesList.subscribe(value => {
-    list = value
-  })()
-  imageIndex.subscribe(value => {
-    index = value
-  })()
-  if (list && list.length > 0) {
-    getImage(list[index])
-  }
-}
-
-async function loadFirstImage() {
+export async function loadFirstImage() {
   let list: string[] | null = []
   const unsubscribe = imagesList.subscribe(value => {
     list = value

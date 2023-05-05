@@ -11,7 +11,7 @@
   <TitleBar>
 
     <a href="/">Home</a>
-    <main class="h-ignore-titlebar mx-auto my-8 px-6">
+    <main class="h-ignore-titlebar px-6">
       <slot />
     </main>
 

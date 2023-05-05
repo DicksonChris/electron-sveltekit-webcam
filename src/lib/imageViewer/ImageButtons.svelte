@@ -1,14 +1,41 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-  import { imagesList } from '$lib/imageViewer/store'
-  const dispatch = createEventDispatcher()
+  import {  getImage } from '$lib/imageViewer/utils'
+  import { imagesList, imageIndex, updateImageIndex } from '$lib/imageViewer/store'
 
   function nextImage() {
-    dispatch('next-image')
+    // Use the custom function to update the imageIndex by 1
+    updateImageIndex(1)
+
+    // Set the image buffer for the new index
+    let list: string[] | null = []
+    let index = 0
+    imagesList.subscribe(value => {
+      list = value
+    })()
+    imageIndex.subscribe(value => {
+      index = value
+    })()
+    if (list && list.length > 0) {
+      getImage(list[index])
+    }
   }
 
   function prevImage() {
-    dispatch('prev-image')
+    // Use the custom function to update the imageIndex by -1
+    updateImageIndex(-1)
+
+    // Set the image buffer for the new index
+    let list: string[] | null = []
+    let index = 0
+    imagesList.subscribe(value => {
+      list = value
+    })()
+    imageIndex.subscribe(value => {
+      index = value
+    })()
+    if (list && list.length > 0) {
+      getImage(list[index])
+    }
   }
 </script>
 

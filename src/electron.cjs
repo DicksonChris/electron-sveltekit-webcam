@@ -7,6 +7,9 @@ const fs = require('fs')
 const { spawn } = require('child_process')
 const path = require('path')
 
+const nodeConsole = require('console');
+const myConsole = new nodeConsole.Console(process.stdout, process.stderr);
+
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -163,13 +166,12 @@ ipcMain.on('scanImage', (event, filename) => {
 ipcMain.on('getImage', (event, filename) => {
   const foldername = filename.split('.')[0] 
   const filepath = path.join(process.env.SCAN_FOLDER, foldername, filename)
-  // read the file as a buffer
+  myConsole.log('Hello from electron 1: ', filepath)
+
   fs.readFile(filepath, (err, data) => {
     if (err) {
-      // send the error to the renderer process
       event.reply('imageError', err.message)
     } else {
-      // send the buffer to the renderer process
       event.reply('imageBuffer', data)
     }
   })
@@ -177,7 +179,7 @@ ipcMain.on('getImage', (event, filename) => {
 
 ipcMain.on('getImages', (event, filename) => {
   const folderpath = path.join(process.env.SCAN_FOLDER, filename)
-  // read the folder and filter for .jpg files containing the filename
+  myConsole.log('Hello from electron: ', folderpath)
   fs.readdir(folderpath, (err, files) => {
     if (err) {
       // send the error to the renderer process
@@ -187,6 +189,22 @@ ipcMain.on('getImages', (event, filename) => {
       const images = files.filter(file => path.extname(file) === '.jpg' && file.includes(filename))
       // send the images list to the renderer process
       event.reply('imagesList', images)
+    }
+  })
+})
+
+ipcMain.on('checkImages', (event, filename) => {
+  const folderpath = path.join(process.env.SCAN_FOLDER, filename)
+  myConsole.log('Checking for existing images: ', folderpath)
+  fs.readdir(folderpath, (err, files) => {
+    if (err) {
+      // send the error to the renderer process
+      event.reply('checkError', err.message)
+    } else {
+      // filter for .jpg files containing the filename
+      const images = files.filter(file => path.extname(file) === '.jpg' && file.includes(filename))
+      // send the images list to the renderer process
+      event.reply('checkResult', images)
     }
   })
 })

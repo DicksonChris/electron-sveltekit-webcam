@@ -24,6 +24,9 @@ const FileSystemAPIS = {
   // Used to get scan jpgs
   getImages: (filename) => ipcRenderer.send('getImages', filename),
   onImagesList: (channel, callback) => ipcRenderer.on(channel, callback),
+  // Used to check for existing images
+  checkImages: (filename) => ipcRenderer.send('checkImages', filename),
+  onCheckResult: (channel, callback) => ipcRenderer.on(channel, callback),
 }
 
 
