@@ -1,6 +1,5 @@
 import { output, error } from '$lib/freightLog/store'
-import { derived } from 'svelte/store'
-import { isScanningStore, totalPages, existsAlready } from '$lib/freightLog/store'
+import { totalPages, existsAlready } from '$lib/freightLog/store'
 
 const fileSystemAPI = window.bridge.FileSystem
 

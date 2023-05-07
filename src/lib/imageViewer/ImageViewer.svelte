@@ -1,6 +1,5 @@
 <script lang="ts">
   import ImageList from '$lib/imageViewer/ImageList.svelte'
-  import ImageButtons from '$lib/imageViewer/ImageButtons.svelte'
   import { getImages, loadFirstImage } from '$lib/imageViewer/utils'
 
   export let filename: string
@@ -11,4 +10,3 @@
 </script>
 
 <ImageList />
-<ImageButtons />

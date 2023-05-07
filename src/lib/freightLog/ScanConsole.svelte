@@ -1,6 +1,12 @@
 <script lang="ts">
-  import { formatOutput } from '$lib/freightLog/scan'
-  import { output, error } from '$lib/freightLog/store'
+	import { onMount } from 'svelte'
+	import { formatOutput } from '$lib/freightLog/scan'
+	import { output, error } from '$lib/freightLog/store'
+
+	onMount(() => {
+		output.set('')
+		error.set('')
+	})
 </script>
 
 <div id="output" class="font-mono">{@html formatOutput($output)}</div>

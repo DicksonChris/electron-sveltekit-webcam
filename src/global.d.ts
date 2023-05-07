@@ -17,8 +17,17 @@ declare interface Window {
 			// Used to get the list of scans from the file system
 			getImages: (filename: string) => void
 			onImagesList: (channel: string, callback: (event: any, data: string[]) => void) => void
+
 			checkImages: (filename: string) => void
 			onCheckResult: (channel: string, callback: (event: any, data: boolean) => void) => void
+
+			// Used to rotate an image by 180 degrees
+			rotateImage: ({ filename, buffer }: { filename: string; buffer: ArrayBuffer }) => void
+			// Result of the rotation operation
+			onRotateResult: (
+				channel: string,
+				callback: (event: any, data: Buffer | Error) => void
+			) => void
 		}
 		Window: {
 			// Used to check if the window is maximized
@@ -34,6 +43,5 @@ declare interface Window {
 			// Used to exit the application
 			exit: () => void
 		}
-
 	}
 }
