@@ -17,6 +17,8 @@ declare interface Window {
 			// Used to get the list of scans from the file system
 			getImages: (filename: string) => void
 			onImagesList: (channel: string, callback: (event: any, data: string[]) => void) => void
+			checkImages: (filename: string) => void
+			onCheckResult: (channel: string, callback: (event: any, data: boolean) => void) => void
 		}
 		Window: {
 			// Used to check if the window is maximized
