@@ -28,6 +28,14 @@ declare interface Window {
 				channel: string,
 				callback: (event: any, data: Buffer | Error) => void
 			) => void
+
+			// // Save rotated image
+			// saveRotatedImage: (filename: any, data: any)
+			// // (filename: string, data: ArrayBuffer) => void
+			// // Result of the save operation
+			// onSaveResult: (channel: any, callback: (event: any, data: any) => void) => void
+			// // (channel: string, callback: (event: any, data: boolean) => void) => void
+
 		}
 		Window: {
 			// Used to check if the window is maximized

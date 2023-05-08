@@ -226,3 +226,24 @@ ipcMain.on('rotateImage', (event, { filename, buffer }) => {
 			event.reply('rotateError', error.message)
 		})
 })
+
+ipcMain.on('saveRotatedImage', (event, { filename, buffer }) => {
+	// check if buffer is defined and has a byteLength property
+	if (buffer && buffer.byteLength) {
+	  // convert buffer to a Buffer instance
+	  buffer = Buffer.from(buffer) 
+	  const foldername = path.join(process.env.SCAN_FOLDER, filename)
+	  const filepath = path.join(process.env.SCAN_FOLDER, foldername, filename + '.jpg') 
+	  myConsole.log('Saving rotated image: ', filepath)
+	  fs.writeFile(filepath, buffer, (err) => {
+		if (err) {
+		  event.reply('saveError', err.message)
+		} else {
+		  event.reply('saveSuccess', 'Image saved!')
+		}
+	  })
+	} else {
+	  // send an error message if buffer is invalid
+	  event.reply('saveError', 'Invalid buffer argument')
+	}
+  })

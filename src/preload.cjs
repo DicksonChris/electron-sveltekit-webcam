@@ -29,7 +29,10 @@ const FileSystemAPIS = {
 	onCheckResult: (channel, callback) => ipcRenderer.on(channel, callback),
 	// Used to rotate images
 	rotateImage: ({ filename, buffer }) => ipcRenderer.send('rotateImage', { filename, buffer }),
-	onRotateResult: (channel, callback) => ipcRenderer.on(channel, callback)
+	onRotateResult: (channel, callback) => ipcRenderer.on(channel, callback),
+	// Used to save rotated images
+	saveRotatedImage: ({ filename, buffer }) => ipcRenderer.send('saveRotatedImage', { filename, buffer }),
+	onSaveResult: (channel, callback) => ipcRenderer.on(channel, callback)
 }
 
 const APP_BRIDGE = {

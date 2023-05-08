@@ -33,7 +33,7 @@
 	})
 </script>
 
-<div class="flex bg-pattern">
+<div class="flex bg-pattern min-h-custom">
 	<div class="flex flex-col bg-gray-100 p-4 border-r-[1px] border-gray-300 shadow-lg">
 		<label for="filename">Enter PO #:</label>
 		<input
@@ -69,16 +69,18 @@
 		<a href="takePhotos" class="btn btn-primary btn-outline">temp Continue</a>
 	</div>
 
-	<div class="h-full ml-12 mt-8 mb-12">
-		{#if $scanCompleted}
-			<ScanWrapper>
-				<ImageViewer {filename} />
-			</ScanWrapper>
-		{:else}
-			<ScanWrapper>
-				<img src={currentImage} alt="" width="640px" />
-			</ScanWrapper>
-		{/if}
+	<div class="h-full mt-8 mb-4 mx-auto">
+		<div class="px-4">
+			{#if $scanCompleted}
+				<ScanWrapper>
+					<ImageViewer {filename} />
+				</ScanWrapper>
+			{:else}
+				<ScanWrapper>
+					<img src={currentImage} alt="" width="640px" />
+				</ScanWrapper>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -89,5 +91,9 @@
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
+	}
+
+	.min-h-custom {
+		min-height: calc(100vh - 59px);
 	}
 </style>

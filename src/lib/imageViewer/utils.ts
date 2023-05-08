@@ -105,19 +105,19 @@ export function rotateImage(filename: string) {
 			imageIndex.subscribe((value) => {
 				index = value
 			})()
-			if (list && list.length > 0) {
-				const filename = list[index]
-				fileSystemAPI.saveImage(filename, Buffer.from(data))
-				fileSystemAPI.onScanMessage('saveSuccess', (event, message) => {
-					console.log(message)
+			// if (list && list.length > 0) {
+			// 	const filename = list[index]
+			// 	fileSystemAPI.saveImage(filename, Buffer.from(data))
+			// 	fileSystemAPI.onScanMessage('saveSuccess', (event, message) => {
+			// 		console.log(message)
 
-					// reload the image buffer from the file system
-					getImage(filename)
-				})
-				fileSystemAPI.onScanMessage('saveError', (event, error) => {
-					console.error(error)
-				})
-			}
+			// 		// reload the image buffer from the file system
+			// 		getImage(filename)
+			// 	})
+			// 	fileSystemAPI.onScanMessage('saveError', (event, error) => {
+			// 		console.error(error)
+			// 	})
+			// }
 		})
 		fileSystemAPI.onRotateResult('rotateError', (event, error) => {
 			console.error(error)
