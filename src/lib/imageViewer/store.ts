@@ -27,3 +27,9 @@ export function updateImageIndex(delta: number) {
     imageIndex.set(index)
   }
 }
+
+export function clearImageViewerStore() {
+  imageBuffer.set(null)
+  imagesList.set(null)
+  imageIndex.set(0)
+}

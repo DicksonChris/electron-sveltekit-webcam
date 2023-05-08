@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { poNumber } from '$lib/orderState/store.js'
+	import { poNumber, palletNumber } from "./orderState/store"
+
+	// import { poNumber, palletNumber } from '$lib/orderState/store.js'
 
   // If PO exists check for information existing in database
-	let po = $poNumber
-	let palletNumber
-	let weight
+	let weight: number
 
 	function increment() {
-		if (!palletNumber) {
-			palletNumber = 1
+		if (!$palletNumber) {
+			palletNumber.set(1)
 		} else {
-			palletNumber++
+			palletNumber.set($palletNumber + 1)
 		}
 	}
 
 	function decrement() {
-		palletNumber--
+		palletNumber.set($palletNumber - 1)
 	}
 
 	function submitForm() {
@@ -31,7 +31,7 @@
 			name="filename"
 			type="text"
 			required
-			bind:value={po}
+			bind:value={$poNumber}
 			placeholder="PO #"
 			class="input input-bordered"
 		/>
@@ -43,11 +43,11 @@
 				id="pallet"
 				name="pallet"
 				type="number"
-				bind:value={palletNumber}
+				bind:value={$palletNumber}
 				placeholder="Pallet #"
-				class="input input-bordered pallet-input"
+				class="input input-bordered pallet-input flex-[1.5]"
 			/>
-			<div class="flex flex-col ml-4 gap-2">
+			<div class="flex flex-1 flex-col ml-4 gap-2">
 				<button type="button" on:click={increment} class="btn btn-primary btn-outline pallet-button"
 					>+</button
 				>

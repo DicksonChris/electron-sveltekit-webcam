@@ -11,13 +11,13 @@ const redLines = [
 ]
 const greenLines = ['Beginning scan', 'Scanned page', 'Exporting image', 'Finished saving images']
 
-export async function scanFreightLog(filename: string, force = false) {
+export async function scanFreightLog(filename: string) {
 	output.set('')
 	error.set('')
 
 	// Check if the file already exists and matches the given pattern
 	const fileExists = await checkFileExists(filename)
-	if (fileExists && !force) {
+	if (fileExists) {
 		error.set('File already exists.')
 		loadExistingImages(filename)
 	} else {
@@ -28,11 +28,11 @@ export async function scanFreightLog(filename: string, force = false) {
 export async function scanAdditionalFreightLog(filename: string) {
 	output.set('')
 	error.set('')
-	fileSystemAPI.scanImage(filename)
-	loadExistingImages(filename)
+	// TODO: remove true for real scanning
+	fileSystemAPI.scanImage(filename, true)
 }
 
-async function loadExistingImages(filename: string) {
+export async function loadExistingImages(filename: string) {
 	// Load the existing images and update the store values
 	fileSystemAPI.getImages(filename)
 	fileSystemAPI.onImagesList('imagesList', (event, images) => {
@@ -55,6 +55,23 @@ async function checkFileExists(filename: string): Promise<boolean> {
 		})
 	})
 }
+
+export function filterOutput(filename:string, output: string) {
+	return output
+	  .split('\n')
+	  .filter((line) => {
+		// Filter out the line that contains the filename without a number suffix
+		line = line.trim()
+		const regex = new RegExp(`${filename}\\.jpg$`) // Match lines that end with filename.jpg
+		return !regex.test(line) // Keep only the lines that do not match the regex
+	  })
+	  .filter((line) => {
+		line = line.trim()
+		
+		return !(line.includes('Exporting...')) && !(line.includes('Starting scan '))
+	  }) // Remove empty lines
+	  .join('\n')
+  }
 
 export function formatOutput(output: string) {
 	return output

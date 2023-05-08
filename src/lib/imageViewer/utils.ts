@@ -1,4 +1,5 @@
-import { imageBuffer, imagesList, imageIndex, updateImageIndex } from './store'
+import { clearFreightLogStore } from '$lib/freightLog/store'
+import { imageBuffer, imagesList, imageIndex, updateImageIndex, clearImageViewerStore } from './store'
 
 const fileSystemAPI = window.bridge.FileSystem
 
@@ -123,4 +124,28 @@ export function rotateImage(filename: string) {
 			console.error(error)
 		})
 	}
+}
+
+export async function deleteImage(filename: string) {
+	
+	fileSystemAPI.deleteImage(filename)
+	// Wait for the deleteSuccess event to resolve
+	await new Promise<void>(resolve => {
+		fileSystemAPI.onScanMessage('deleteSuccess', (event, message) => {
+			console.log(message)
+			if (message.includes("Folder")) {
+				clearImageViewerStore()
+				clearFreightLogStore()
+			}
+			resolve()
+		})
+	})
+	fileSystemAPI.onScanMessage('deleteError', (event, error) => {
+		console.error(error)
+	})
+	// Convert <filename>.1.jpg to <filename>
+	filename = filename.split('.')[0]
+	getImages(filename, loadFirstImage)
+	// Update the imagesList store by removing the deleted filename
+	imagesList.update(list => list ? list.filter(item => item !== filename) : null)
 }

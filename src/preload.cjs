@@ -15,7 +15,7 @@ const FileSystemAPIS = {
 	// Used to save stills from the camera
 	saveImage: (data) => ipcRenderer.send('saveImage', data),
 	// Used to initiate a scan
-	scanImage: (filename) => ipcRenderer.send('scanImage', filename),
+	scanImage: (filename, testing = false) => ipcRenderer.send('scanImage', filename, testing),
 	// Returns the console output of the scan
 	onScanMessage: (channel, callback) => ipcRenderer.on(channel, callback),
 	// Used to get a single scan jpg
@@ -32,7 +32,10 @@ const FileSystemAPIS = {
 	onRotateResult: (channel, callback) => ipcRenderer.on(channel, callback),
 	// Used to save rotated images
 	saveRotatedImage: ({ filename, buffer }) => ipcRenderer.send('saveRotatedImage', { filename, buffer }),
-	onSaveResult: (channel, callback) => ipcRenderer.on(channel, callback)
+	onSaveResult: (channel, callback) => ipcRenderer.on(channel, callback),
+	// Delete image
+	deleteImage: (filename) => ipcRenderer.send('deleteImage', filename),
+	onDeleteResult: (channel, callback) => ipcRenderer.on(channel, callback),
 }
 
 const APP_BRIDGE = {

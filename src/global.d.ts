@@ -6,9 +6,15 @@ declare interface Window {
 	bridge: {
 		FileSystem: {
 			// Used to save the image from a camera
-			saveImage: (filename: string, data: ArrayBuffer) => void
+			saveImage: (data: {
+				PO_NUMBER: string,
+				PALLET_NUMBER: number,
+				name: string,
+				timestamp: string,
+				blob: string | ArrayBuffer | null
+			}) => void
 			// Used to initiate the scan process
-			scanImage: (filename: string) => void
+			scanImage: (filename: string, testing?: boolean) => void
 			// Console output from the scan process
 			onScanMessage: (channel: string, callback: (event: any, data: string) => void) => void
 			// Used to get a single scan from the file system
@@ -28,6 +34,10 @@ declare interface Window {
 				channel: string,
 				callback: (event: any, data: Buffer | Error) => void
 			) => void
+			// Delete image
+			deleteImage: (filename: string) => void
+			// Result of the delete operation
+			onDeleteResult: (channel: string, callback: (event: any, data: boolean) => void) => void
 
 			// // Save rotated image
 			// saveRotatedImage: (filename: any, data: any)

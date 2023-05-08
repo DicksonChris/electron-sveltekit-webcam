@@ -38,3 +38,12 @@ fileSystemAPI.onScanMessage('scanError', (event, data) => {
 		return updatedValue
 	})
 })
+
+export function clearFreightLogStore() {
+	output.set('')
+	error.set('')
+	isScanningStore.set(false)
+	totalPages.set(null)
+	existsAlready.set(false)
+	scannedPages = 0
+}

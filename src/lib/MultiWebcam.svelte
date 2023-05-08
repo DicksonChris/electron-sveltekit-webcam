@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { poNumber, palletNumber } from "./orderState/store"
+
   const fileSystemAPI = window.bridge.FileSystem
 
   const CAMERA_RESOLUTION = {
@@ -41,7 +43,7 @@
       .enumerateDevices()
       .then((devices) =>
         devices.filter(
-          (device) => device.kind === 'videoinput' && device.label.includes('0c45:6366')
+          (device) => device.kind === 'videoinput' && (device.label.includes('0c45:6366') || true) // TODO remove OR true
         )
       )
       .then((webcamDevices) =>
@@ -61,6 +63,7 @@
   }
 
   function saveImage(webcam: Webcam) {
+    // TODO: Instead of using a timestamp, prompt user to overwrite existing image in order to deal with users spam clicking the button or forgetting to change something
     const timestamp = new Date()
       .toLocaleString('en-US', {
         year: 'numeric',
@@ -71,8 +74,9 @@
         second: 'numeric',
         hour12: true,
       })
-      .replace(/[/:]/g, '-')
+      .replace(/[/:]/g, '_')
       .replace(/ /g, '-')
+      .replace(/,/g, '_')
       
     const video = document.createElement('video')
     video.srcObject = webcam.stream
@@ -88,8 +92,10 @@
       canvas.toBlob((blob) => {
         const reader = new FileReader()
         reader.onload = () => {
-          const name = `CAMERA-${webcams.indexOf(webcam) + 1}`
+          const name = `PO#-${$poNumber}__PALLET#-${$palletNumber}__CAMERA-${webcams.indexOf(webcam) + 1}`
           const data = {
+            PO_NUMBER: $poNumber,
+            PALLET_NUMBER: $palletNumber,
             name,
             timestamp,
             blob: reader.result,

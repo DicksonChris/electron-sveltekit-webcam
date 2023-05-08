@@ -11,6 +11,6 @@
 </div>
 <div class="grid grid-cols-2 gap-4" style="grid-template-columns: 1fr 1fr;">
   <POForm />
-  <!-- <MultiWebcam /> -->
-  <DummyMultiWebcam />
+  <MultiWebcam />
+  <!-- <DummyMultiWebcam /> -->
 </div>

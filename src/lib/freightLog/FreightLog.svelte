@@ -4,11 +4,19 @@
 	import ImageViewer from '$lib/imageViewer/ImageViewer.svelte'
 	import ScanWrapper from '$lib/freightLog/ScanWrapper.svelte'
 	import { scanFreightLog, scanAdditionalFreightLog } from '$lib/freightLog/scan'
-	import { isScanningStore, totalPages, existsAlready } from '$lib/freightLog/store'
+	import {
+		clearFreightLogStore,
+		isScanningStore,
+		totalPages,
+		existsAlready
+	} from '$lib/freightLog/store'
+	import { clearImageViewerStore } from '$lib/imageViewer/store'
 	import ScanConsole from './ScanConsole.svelte'
 	import { derived } from 'svelte/store'
 	import { setPoNumber } from '$lib/orderState/store'
 	import ImageButtons from '$lib/imageViewer/ImageButtons.svelte'
+
+	import { getImages, loadFirstImage } from '$lib/imageViewer/utils'
 
 	let filename = ''
 	let currentImage = placeholder
@@ -17,24 +25,23 @@
 		([$isScanningStore, $totalPages]) => !$isScanningStore && $totalPages !== null
 	)
 
-	$: if ($scanCompleted || true) {
+	$: if ($scanCompleted) {
 		setPoNumber(filename)
 	}
 
-	function resetStore() {
-		isScanningStore.set(false)
-		totalPages.set(null)
-		existsAlready.set(false)
-		setPoNumber('')
-	}
-
 	onMount(() => {
-		resetStore()
+		clearFreightLogStore()
+		clearImageViewerStore()
 	})
 </script>
 
 <div class="flex bg-pattern min-h-custom">
-	<div class="flex flex-col bg-gray-100 p-4 border-r-[1px] border-gray-300 shadow-lg">
+	<div
+		class="flex flex-col bg-gray-100 p-4 border-r-[1px] border-gray-300 shadow-lg w-[340px] gap-2"
+	>
+		<!-- <button class="btn btn-primary btn-outline" on:click={() => getImages(filename, loadFirstImage)}
+			>Force Load</button
+		> -->
 		<label for="filename">Enter PO #:</label>
 		<input
 			id="filename"
@@ -49,7 +56,10 @@
 		{#if $existsAlready}
 			<button
 				class="btn {$isScanningStore || !filename ? 'btn-disabled' : 'btn-warning'}"
-				on:click={() => scanAdditionalFreightLog(filename)}
+				on:click={async () => {
+					await scanAdditionalFreightLog(filename)
+					setTimeout(() => getImages(filename, loadFirstImage), 1500)
+				}}
 				disabled={$isScanningStore || !filename}>Scan More</button
 			>
 		{:else}
@@ -64,9 +74,7 @@
 		{/if}
 
 		<ImageButtons {filename} />
-		<ScanConsole />
-
-		<a href="takePhotos" class="btn btn-primary btn-outline">temp Continue</a>
+		<ScanConsole {filename} />
 	</div>
 
 	<div class="h-full mt-8 mb-4 mx-auto">

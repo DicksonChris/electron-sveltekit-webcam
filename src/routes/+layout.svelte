@@ -9,7 +9,7 @@
 
 {#if ready}
 	<TitleBar>
-		<div class=" bg-red-600">
+		<div class="bg-amber-100">
 			<a href="/">Home</a>
 			<slot />
 		</div>
