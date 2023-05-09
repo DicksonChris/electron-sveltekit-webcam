@@ -10,7 +10,7 @@
 		if (!$palletNumber) {
 			palletNumber.set(1)
 		} else {
-			palletNumber.set($palletNumber + 1)
+			palletNumber.update(num => num + 1)
 		}
 	}
 
